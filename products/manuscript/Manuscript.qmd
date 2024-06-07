@@ -67,12 +67,20 @@ During data cleaning, we'll use the data dictionary to decode each field. For in
 table(hr_data$Education)
 ```
 
-# Methods
+# Analysis Methods
 
-*Describe your methods. That should describe the data, the cleaning processes, and the analysis approaches. You might want to provide a shorter description here and all the details in the supplement.*
+## Data Cleaning Process
 
-## Exploratory/Descriptive analysis
+In the data cleaning process, I will use the data dictionary to enhance data interpretation. For example, I will address issues like the Education field being labeled from 1 to 5 instead of using descriptive education level labels. I will also examine variables to detect any inaccuracies. An example of that could be to exclude the compensation fields (hourly, daily, and monthly rates) and use the Monthly Income field to ensure consistency and clarity.
 
-## Statistical analysis
+## Descriptive Analysis
 
-*Explain anything related to your statistical analyses.*
+I will begin my project descriptive analysis, with the goal of summarizing the data. This first step will provide insights into any outliers or patterns within the dataset. This information will also help us with creating visualization that will highlight the patterns in the data so we can focus on specific areas.
+
+## Correlation Analysis
+
+As we explore various analysis methods in our class, my focus is on finding potential correlation between variables and employee attrition. I am interested in using the demographic details, job attributes and survey data to uncover pattern (if any) that highlight this issue .
+
+## Predictive Modeling
+
+My main goal is to predict when an employee might leave the company. I am interested in using predictive modeling techniques (also part of my other summer class) to see if we can predict attrition. Once I've identified potential departures, we can use this findings to create strategies to prevent or reduce attrition.
