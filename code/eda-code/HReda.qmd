@@ -1,6 +1,6 @@
 ---
-title: "An example exploratory analysis script"
-date: "2024-02-07"
+title: "HR Data Exploratory Analysis Script"
+date: "Summer 2024"
 output: html_document
 ---
 
@@ -39,10 +39,84 @@ Load the data.
 
 ```{r}
 #Path to data. Note the use of the here() package and not absolute paths
-data_location <- here::here("data","processed-data","processeddata.rds")
+data_location = here::here("data","processed-data","HRprocesseddata.rds")
 #load data
-mydata <- readRDS(data_location)
+myhrdata = readRDS(data_location)
 ```
+
+
+# HR Data Exploration Through Tables
+
+
+```{r}
+col_names = names(myhrdata)
+num_columns <- 3  
+
+num_rows <- ceiling(length(col_names) / num_columns)
+
+summary_matrix <- matrix(col_names, nrow = num_rows, byrow = TRUE)
+
+summary_df <- as.data.frame(summary_matrix)
+
+# Print the summary data frame
+print(summary_df)
+#Save to file
+summarytable_file = here("results", "tables", "HRvariablestable.rds")
+saveRDS(summary_df, file = summarytable_file)
+
+```
+
+
+
+
+```{r}
+summary_df = skimr::skim(myhrdata)
+print(summary_df)
+# save to file
+summarytable_file = here("results", "tables", "HRsummarytable.rds")
+saveRDS(summary_df, file = summarytable_file)
+```
+
+
+Gender Table
+
+```{r}
+#summary_df = skimr::skim(myhrdata)
+#print(summary_df)
+
+summary_df = myhrdata %>%
+  count(Gender) %>%
+  mutate(`Total Count` = n,
+         `% of Total` = (n / sum(n)) * 100) %>%
+  select(Gender, `Total Count`, `% of Total`)
+
+print(summary_df)
+# save to file
+summarytable_file = here("results", "tables", "HRgendertable.rds")
+saveRDS(summary_df, file = summarytable_file)
+```
+
+
+Gender and Tenure Boxplot
+
+```{r}
+p1 = myhrdata %>%
+  ggplot(aes(x = YearsAtCompany)) +
+  geom_histogram(binwidth = 1, boundary = 0.5, fill = "gray", color = "black") +
+  labs(x = "Tenure", y = "Count") + 
+  theme_minimal() +
+  theme(panel.background = element_rect(fill = "white"))
+
+print(p1)
+
+figure_file = here("results", "figures","tenure-distribution.png")
+ggsave(filename = figure_file, plot=p1)
+```
+
+
+
+
+
 
 
 

@@ -17,7 +17,7 @@ csl: ../../assets/apa.csl
 library(here)
 library(knitr)
 
-hr_data = read.csv("C:/Users/crew_/OneDrive/Escritorio/Guille/UTSA Masters/MSDA/DA6833/PracticumII-Course/guillermogallardo-final-project/data/raw-data/IBM HR Analytics Data.csv", header = TRUE) #not synced with OneDrive but my computer added that folder when I entered my email when I bought the computer
+#hr_data = read.csv("C:/Users/crew_/OneDrive/Escritorio/Guille/UTSA Masters/MSDA/DA6833/PracticumII-Course/guillermogallardo-final-project/data/raw-data/IBM HR Analytics Data.csv", header = TRUE) #not synced with OneDrive but my computer added that folder when I entered my email when I bought the computer
 ```
 
 # Project Overview
@@ -42,40 +42,117 @@ For this project, I was looking for a dataset with employee data that included a
 
 The dataset for this project was sourced from [Kaggle.com](https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset) and was created by IBM Data Scientists as a fictional representation of HR data. It consists of 1,470 rows and 35 variables that cover demographic details, job characteristics, compensation, performance metrics, and employee satisfaction data. This data serves as the foundation for analyzing factors contributing to employee turnover and developing a predictive model.
 
-## **Variables**
+# Data Cleaning Process
 
-This file includes 35 variables, detailed below, which includes a combination of character and integer types, with some of the character variables being categorical.
+Data cleaning is an important step in data analysis process and focuses on detecting and correcting errors and inconsistencies in the dataset. The goals is to ensure that the data is accurate, complete and reliable. Overall, this dataset didn't have any anomalies and there were only a couple of steps I took to prepare the data. The steps we took are the following:
 
-```{r Variables}
+**Loading Data for Cleaning Process**
 
-str(hr_data)
+In order to start the cleaning process, we need make to sure we load the data. In the code below, we use the *library(here)* function to set the file path dynamically, so our script can find and access the data files regardless of the current working directory.
+
+```{r, message=FALSE}
+#| echo: false
+library(here)
+library(dplyr)
 ```
 
-## **Gender**
-
-Out of the 1,470 observation in the dataset, 588 are female and 882 are male. This provides a quick snapshot of the gender distribution within the data.
-
-```{r Gender}
-table(hr_data$Gender)
+```{r, results='hide'}
+hr_data = here::here("data","raw-data","IBM HR Analytics Data.xlsx")
+rawdata = readxl::read_excel(hr_data)
 ```
 
-## **Education**
+**Removing Column**
 
-During data cleaning, we'll use the data dictionary to decode each field. For instance, the education field is labeled from 1 to 5, representing different educational levels: 1 = "Below College," 2 = "College," 3 = "Bachelor's," 4 = "Master's," and 5 = "Doctorate." Notably, about 40% of the dataset holds a Bachelor's degree.
+In the next step of my data cleaning process, I removed three columns from the dataset. The columns we removed are *DailyRate*, *HourlyRate* and *MonthlyRate.* These columns were removed because the numbers they contained did not align logically or meaningfully. Upon further investigation, it became evident that there was no clear resolution to these discrepancies in Kaggle, and many suggested focusing instead on the Monthly Income field to maintain data consistency and reliability.
 
-```{r Education}
-table(hr_data$Education)
+```{r, results='hide'}
+d1 = rawdata %>% 
+  select(-DailyRate, -HourlyRate, -MonthlyRate)
+
+head(d1)
+```
+
+**Adding Labels**
+
+Next, we addressed the *Education* field as the third step in our process. Initially numeric, it contained values ranging from 1 to 5. Using our data dictionary, we updated these numeric values to their corresponding labels. This adjustment enhances our understanding of employee education levels in the dataset and ensures consistency in the data.
+
+```{r, results='hide'}
+d2 = d1 %>% 
+    mutate(Education = case_when(
+    Education == 1 ~ "Below College",
+    Education == 2 ~ "College",
+    Education == 3 ~ "Bachelor's",
+    Education == 4 ~ "Master's",
+    Education == 5 ~ "Doctorate",
+    TRUE ~ as.character(Education)
+  ))
+
+head(d2)
+```
+
+**Saving File**
+
+The final step in this process involved saving the file as an RDS file. This ensures that we can use it for our exploratory data analysis and maintain an organized project that is reproducible.
+
+```{r, results='hide'}
+HRprocesseddata = d2
+
+save_data_location = here::here("data","processed-data","HRprocesseddata.rds")
+saveRDS(HRprocesseddata, file = save_data_location)
 ```
 
 # Analysis Methods
 
-## Data Cleaning Process
+## Exploratory Data Analysis
 
-In the data cleaning process, I will use the data dictionary to enhance data interpretation. For example, I will address issues like the Education field being labeled from 1 to 5 instead of using descriptive education level labels. I will also examine variables to detect any inaccuracies. An example of that could be to exclude the compensation fields (hourly, daily, and monthly rates) and use the Monthly Income field to ensure consistency and clarity.
+I am starting my exploratory data analysis project with the objective of summarizing the dataset. I will begin by providing a concise overview of the variables included. Additionally, I will generate plots and tables to identify any outliers or patterns within the dataset. This analysis will help us understand the data available to us and guide our strategy to predict employee attrition within the organization.
 
-## Descriptive Analysis
+### Data Variables
 
-I will begin my project descriptive analysis, with the goal of summarizing the data. This first step will provide insights into any outliers or patterns within the dataset. This information will also help us with creating visualization that will highlight the patterns in the data so we can focus on specific areas.
+This dataset contains 35 variables, consisting of both character and integer types, with several character variables categorized as categorical. It provides valuable insights into employees, including demographic information such as age, gender, and marital status. Additionally, it offers details about their employment, including monthly income, department, and tenure, which are crucial for understanding their professional profiles and organizational dynamics.
+
+```{r}
+#| label: col-hrprocessingdata
+#| tbl-cap: "HR Data Variables"
+#| echo: FALSE
+variables=readRDS("../../results/tables/HRvariablestable.rds")
+knitr::kable(variables)
+```
+
+### **Gender** 
+
+The dataset consists of 1470 employees, with a gender distribution showing that males constitute the majority at 60%, while females make up 40%.
+
+**Distribution**
+
+```{r}
+#| label: col-hrgender
+#| tbl-cap: "Employee Gender"
+#| echo: FALSE
+gender_table=readRDS("../../results/tables/HRgendertable.rds")
+knitr::kable(gender_table)
+```
+
+### **Employee Tenure (in years)**
+
+I examined the distribution of employee tenure and identified two distinct peaks: one at 5 years and another at 1 year. This provide quick insights into the typical duration of employees within the organization, and help us identify patterns that may influence employees to resign.
+
+```{r}
+#| label: fig-tenure
+#| fig-cap: "Employee Tenure"
+#| echo: FALSE
+knitr::include_graphics(here("results","figures","tenure-distribution.png"))
+```
+
+**MAYBE ADD LABEL FOR TENURE?**
+
+### **Education** MOVE TO EDA
+
+During data cleaning, we'll use the data dictionary to decode each field. For instance, the education field is labeled from 1 to 5, representing different educational levels: 1 = "Below College," 2 = "College," 3 = "Bachelor's," 4 = "Master's," and 5 = "Doctorate." Notably, about 40% of the dataset holds a Bachelor's degree.
+
+```{r }
+
+```
 
 ## Correlation Analysis
 
