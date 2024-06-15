@@ -1,7 +1,3 @@
 # eda-code
 
-This folder contains code to do a simple exploratory data analysis (EDA) on the processed/cleaned data.
-The code produces a few tables and figures, which are saved in the appropriate `results` sub-folder.
-
-It's the same code done 3 times. For explanations on the 3 different ways, see the readme file in the `processing-code` folder.
-
+This folder includes a file named HReda, which contains code for conducting simple exploratory data analysis (EDA) by generating tables and plots. This QMD file utilizes the cleaned data to produce these visualizations, which are then stored in the designated `results` sub-folder.

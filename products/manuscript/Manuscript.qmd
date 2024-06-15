@@ -61,7 +61,7 @@ hr_data = here::here("data","raw-data","IBM HR Analytics Data.xlsx")
 rawdata = readxl::read_excel(hr_data)
 ```
 
-**Removing Column**
+**Removing Columns**
 
 In the next step of my data cleaning process, I removed three columns from the dataset. The columns we removed are *DailyRate*, *HourlyRate* and *MonthlyRate.* These columns were removed because the numbers they contained did not align logically or meaningfully. Upon further investigation, it became evident that there was no clear resolution to these discrepancies in Kaggle, and many suggested focusing instead on the Monthly Income field to maintain data consistency and reliability.
 
@@ -72,7 +72,7 @@ d1 = rawdata %>%
 head(d1)
 ```
 
-**Adding Labels**
+**Adding Descriptive Labels**
 
 Next, we addressed the *Education* field as the third step in our process. Initially numeric, it contained values ranging from 1 to 5. Using our data dictionary, we updated these numeric values to their corresponding labels. This adjustment enhances our understanding of employee education levels in the dataset and ensures consistency in the data.
 
@@ -88,6 +88,18 @@ d2 = d1 %>%
   ))
 
 head(d2)
+```
+
+**Tenure Categorization**
+
+To enhance the visualization of tenure distribution, I opted to introduce a new variable categorizing employee tenure. This approach allows us to identify the predominant tenure group, offering insights into potential turnover risks.
+
+```{r, results='hide'}
+tenure_breaks <- seq(0, 40, by = 5)
+tenure_labels <- paste0(tenure_breaks[-length(tenure_breaks)], "-", tenure_breaks[-1], " years")
+
+d3 = d2 %>%
+  mutate(TenureCategory = cut(YearsAtCompany, breaks = tenure_breaks, labels = tenure_labels, include.lowest = TRUE))
 ```
 
 **Saving File**
@@ -119,20 +131,6 @@ variables=readRDS("../../results/tables/HRvariablestable.rds")
 knitr::kable(variables)
 ```
 
-### **Gender** 
-
-The dataset consists of 1470 employees, with a gender distribution showing that males constitute the majority at 60%, while females make up 40%.
-
-**Distribution**
-
-```{r}
-#| label: col-hrgender
-#| tbl-cap: "Employee Gender"
-#| echo: FALSE
-gender_table=readRDS("../../results/tables/HRgendertable.rds")
-knitr::kable(gender_table)
-```
-
 ### **Employee Tenure (in years)**
 
 I examined the distribution of employee tenure and identified two distinct peaks: one at 5 years and another at 1 year. This provide quick insights into the typical duration of employees within the organization, and help us identify patterns that may influence employees to resign.
@@ -144,14 +142,40 @@ I examined the distribution of employee tenure and identified two distinct peaks
 knitr::include_graphics(here("results","figures","tenure-distribution.png"))
 ```
 
-**MAYBE ADD LABEL FOR TENURE?**
+**Tenure category**
 
-### **Education** MOVE TO EDA
+More than half of the employees have tenure of less than 5 years, suggesting a relatively young workforce. Shorter tenure could potentially indicate a higher turnover risk, although a comprehensive analysis incorporating other variables is necessary to fully understand the situation.
 
-During data cleaning, we'll use the data dictionary to decode each field. For instance, the education field is labeled from 1 to 5, representing different educational levels: 1 = "Below College," 2 = "College," 3 = "Bachelor's," 4 = "Master's," and 5 = "Doctorate." Notably, about 40% of the dataset holds a Bachelor's degree.
+```{r}
+#| label: fig-tenureCategory
+#| fig-cap: "Tenure Category"
+#| echo: FALSE
+knitr::include_graphics(here("results","figures","tenure-category.png"))
+```
+
+### **Gender**
+
+The dataset consists of 1470 employees, with a gender distribution showing that males constitute the majority at 60%, while females make up 40%.
+
+**Distribution**
+
+```{r}
+#| label: tbl-hrgender
+#| tbl-cap: "Employee Gender"
+#| echo: FALSE
+gender_table=readRDS("../../results/tables/HRgendertable.rds")
+knitr::kable(gender_table)
+```
+
+### **Monthly Income and Education**
+
+I'm interested in examining which educational group experiences higher attrition rates. It's evident from the data that median salaries increase with higher levels of education, but there are also numerous outliers present. This visualization serves to highlight the relationship between monthly income and educational background, which could provide insights into how these factors influence employee turnover.
 
 ```{r }
-
+#| label: fig-Income-Education
+#| fig-cap: "Monthly Income by Education Level"
+#| echo: FALSE
+knitr::include_graphics(here("results","figures","income-education.png"))
 ```
 
 ## Correlation Analysis
