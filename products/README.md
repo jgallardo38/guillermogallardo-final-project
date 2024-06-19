@@ -1,12 +1,11 @@
 # products
 
-This repository contains all the essential components for the successful reproduction and understanding of the project. The primary contents are organized within the products folder, which is structured to facilitate easy access and execution of project components.
+This repository contains all the essential components necessary for reproducing and understanding the project. The primary contents are organized within the products folder, structured to facilitate easy access and execution of project components.
 
-#Products Folder
+## Manuscript
 
-##Manuscript
+File: Manuscript.qmd
 
-##File: Manuscript.qmd
+This file serves as the core document for the project. To export it as a Word document, render this file. The rendered document will include comprehensive details such as data visualizations, analysis summaries, and all relevant information related to the project.
 
-This file is the core document for the project. You need to render this file to export it as a Word document. The rendered document will include comprehensive details such as data visualizations, analysis summaries, and all relevant information pertaining to the project.
 

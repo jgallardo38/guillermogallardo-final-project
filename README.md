@@ -21,20 +21,4 @@ To replicate this project, navigate to the products/manuscript directory and ope
   * `readme.md`: this file contains instructions or details about the folder it
   is located in. You are reading the project-level `README.md` file right now. There is a `readme` in almost every folder.
   * `HR-Turnover-Analysis.Rproj` is a file that tells RStudio that this is the main folder for a project. Rename if you want.
-  * a few "hidden" files and folders (they start with a `.` and depending on how your OS is configured, you might not see them). Those are for R/RStudio and Git/GitHub and you can ignore them.
 
-
-
-
-# Package management
-
-It is recommended to use [renv](https://rstudio.github.io/renv/index.html) to manage R packages and increase chances of future reproducibility. This is required if you are using the template as part of a research project for our group. Otherwise, you can decide to implement `renv` or not. This can happen at any stage, though earlier in the project is generally better.
-
-If you plan to use `renv`, start by reading [the introduction to `renv` article](https://rstudio.github.io/renv/articles/renv.html) so you know how to use it.
-
-
-# Getting started
-
-This is a Github template repository. The best way to get it and start using it is [by following these steps.](https://help.github.com/en/articles/creating-a-repository-from-a-template)
-
-Once you got the repository, you can check out the examples by executing them in order. First run the processing code, which will produce the processed data. Then run the analysis scripts, which will take the processed data and produce some results. Then you can run the manuscript, poster and slides example files in any order. Those files pull in the generated results and display them. These files also pull in references from the `bibtex` file and format them according to the CSL style.

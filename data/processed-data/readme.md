@@ -1,6 +1,6 @@
-# processed-data
+# Processed-Data
 
-This folder holds data that has been processed and cleaned using code.
+This directory contains data that has been processed and cleaned using code.
 
-Any files located in here are based on the raw data and can be re-created running the various processing/cleaning code scripts in the `code` folder.
+Any files found here are derived from the raw data and can be recreated by running the respective processing and cleaning scripts located in the *code* folder.
 

@@ -26,12 +26,12 @@ myhrdata = readRDS(data_location)
 ```
 
 
-# HR Data Exploration Through Tables
+## HR Data Exploration Through Tables
 
 
 ```{r}
 col_names = names(myhrdata)
-num_columns = 3  
+num_columns = 3   
 
 num_rows = ceiling(length(col_names) / num_columns)
 
@@ -47,9 +47,9 @@ saveRDS(summary_df, file = summarytable_file)
 
 ```
 
+## Data Summary
 
-
-
+Basic summary of data.
 ```{r}
 summary_df = skimr::skim(myhrdata)
 print(summary_df)
@@ -59,17 +59,15 @@ saveRDS(summary_df, file = summarytable_file)
 ```
 
 
-Gender Table
+## Gender Table
 
 ```{r}
-#summary_df = skimr::skim(myhrdata)
-#print(summary_df)
 
 summary_df = myhrdata %>%
   count(Gender) %>%
   mutate(`Total Count` = n,
-         `% of Total` = (n / sum(n)) * 100) %>%
-  select(Gender, `Total Count`, `% of Total`)
+         `% of Total` = (n / sum(n)) * 100) %>% #creating new column for percentage of total
+  select(Gender, `Total Count`, `% of Total`) #selecting only 3 variables
 
 print(summary_df)
 # save to file
@@ -78,15 +76,15 @@ saveRDS(summary_df, file = summarytable_file)
 ```
 
 
-Tenure Distribution
+## Tenure Distribution
 
+Visualizing tenure to find distribution.
 ```{r}
 p1 = myhrdata %>%
   ggplot(aes(x = YearsAtCompany)) +
   geom_histogram(binwidth = 1, boundary = 0.5, fill = "gray", color = "black") +
   labs(x = "Tenure", y = "Count") + 
-  theme_minimal() +
-  theme(panel.background = element_rect(fill = "white"))
+  theme_minimal() 
 
 print(p1)
 
@@ -94,18 +92,14 @@ figure_file = here("results", "figures","tenure-distribution.png")
 ggsave(filename = figure_file, plot=p1)
 ```
 
-
+## Distribution of Tenure
 
 ```{r}
 p2 = myhrdata %>%
   ggplot(aes(x = TenureCategory)) +
   geom_bar(fill = "gray", color = "black") +
   labs(x = "Tenure", y = "Count", title = "Distribution of Tenure Categories") + 
-  theme_minimal() +
-  theme(panel.background = element_rect(fill = "white"),
-        axis.text.x = element_text(angle = 45, hjust = 1)) +
-  guides(fill = FALSE)
-
+  theme_minimal()
 
 print(p2)
 
@@ -114,27 +108,48 @@ ggsave(filename = figure_file, plot=p2)
 ```
 
 
+## Education vs Monthly Income
+
 ```{r}
-education_levels <- c("Below College", "College", "Bachelor's", "Master's", "Doctorate")
-
-# Convert Education to factor with defined levels
-myhrdata$Education <- factor(myhrdata$Education, levels = education_levels)
-
-# Boxplot of MonthlyIncome by Education
-p3 <- ggplot(myhrdata, aes(x = Education, y = MonthlyIncome)) +
+p3 = ggplot(myhrdata, aes(x = Education, y = MonthlyIncome)) +
   geom_boxplot(fill = "gray", color = "black") +
   labs(x = "Education", y = "Monthly Income", title = "Boxplot of Monthly Income by Education") + 
-  theme_minimal() +
-  theme(panel.background = element_rect(fill = "white"),
-        axis.text.x = element_text(angle = 45, hjust = 1))
+  theme_minimal()
 
-# Print the plot
+
 print(p3)
 
 figure_file = here("results", "figures","income-education.png")
 ggsave(filename = figure_file, plot=p3)
 ```
 
+## Age vs Attrition
 
+```{r}
+p5 = ggplot(myhrdata, aes(x = Age, fill = Attrition)) +
+  geom_histogram(binwidth = 1, position = "dodge") +
+  scale_fill_manual(values = c("No" = "grey", "Yes" = "#595959")) + #selecting bar colors
+  labs(title = "Age vs Attrition", x = "Age", y = "Count") +
+  theme_minimal()
+
+print(p5)
+
+figure_file = here("results", "figures","age-attrition.png")
+ggsave(filename = figure_file, plot=p5)
+```
+
+
+```{r}
+p4 = ggplot(myhrdata, aes(x = Department, fill = Attrition)) +
+  geom_bar(position = "dodge", color = "black") +
+  scale_fill_manual(values = c("No" = "grey", "Yes" = "#595959")) + #selecting bar colors
+  labs(title = "Department vs Attrition", x = "Department", y = "Count") +
+  theme_minimal()
+
+print(p4)
+
+figure_file = here("results", "figures","department-attrition.png")
+ggsave(filename = figure_file, plot=p4)
+```
 
 

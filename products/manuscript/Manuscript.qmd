@@ -17,7 +17,6 @@ csl: ../../assets/apa.csl
 library(here)
 library(knitr)
 
-#hr_data = read.csv("C:/Users/crew_/OneDrive/Escritorio/Guille/UTSA Masters/MSDA/DA6833/PracticumII-Course/guillermogallardo-final-project/data/raw-data/IBM HR Analytics Data.csv", header = TRUE) #not synced with OneDrive but my computer added that folder when I entered my email when I bought the computer
 ```
 
 # Project Overview
@@ -178,9 +177,27 @@ I'm interested in examining which educational group experiences higher attrition
 knitr::include_graphics(here("results","figures","income-education.png"))
 ```
 
+### **Age vs Attrition**
+
+In the bar chart, it is evident that attrition peaks among employees aged between 28 and 32. This trend suggests that individuals in this age group may be more likely to leave the company. Possible reasons for increased turnover in this demographic could include career advancement opportunities elsewhere, desire for higher compensation, or life changes such as starting a family.
+
+```{r}
+#| label: fig-Age-Attrition
+#| fig-cap: "Attrition by Employee Age"
+#| echo: FALSE
+knitr::include_graphics(here("results","figures","age-attrition.png"))
+```
+
+
+
 ## Correlation Analysis
 
 As we explore various analysis methods in our class, my focus is on finding potential correlation between variables and employee attrition. I am interested in using the demographic details, job attributes and survey data to uncover pattern (if any) that highlight this issue .
+
+
+```{r}
+
+```
 
 ## Predictive Modeling
 

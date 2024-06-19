@@ -3,7 +3,7 @@ title: "Cleaning HR Data for Analysis"
 author: "Guillermo Gallardo"
 date: "Summer 2024"
 output: html_document
-
+---
 
 
 # Setup
@@ -53,8 +53,6 @@ skimr::skim(rawdata)
 ```
 
 
-**NEED TO UPDATE THE EDUCATION FIELD**
-
 # Cleaning HR Data
 
 Removing three columns from dataset. This columns provide incorrect salary information. After reviewing the data, I decided to keep only the *MonthlyIncome* field to have consistency in the analysis.
@@ -96,10 +94,12 @@ head(d3)
 ```
 
 
-
+Saving updated dataset into HRprocesseddata
 ```{r}
 HRprocesseddata = d3
 ```
+
+
 
 
 # Save data 

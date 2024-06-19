@@ -1,3 +1,9 @@
-# tables
+# Summary Tables
 
-This folder houses the summary table designed for the project, featuring three distinct RDS files. The first file, named HRgendertable, includes counts and percentages for male and female participants. The second file is the HRsummarytable. The third file, HRvariables table, provides a detailed list of all the variables used in the project, formatted for clear presentation in the report.
+This directory contains three RDS files, each serving a specific purpose within the project summary:
+
+HRgendertable.rds: Provides counts and percentages of male and female participants.
+
+HRsummarytable.rds: Features a comprehensive summary table designed for the project.
+
+HRvariables_table.rds: Lists all variables used in the project, formatted for clear presentation in the report.
