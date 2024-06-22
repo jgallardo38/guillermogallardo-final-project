@@ -31,7 +31,7 @@ We have two main questions that we want to answer during this project.
 
 -   What are the primary factors that contribute to employee attrition?
 
--   What strategies can be implement to enhance employee retention and improve the overall employee experience?
+-   What strategies can we implement to enhance employee retention and improve the overall employee experience?
 
 # Dataset
 
@@ -39,7 +39,7 @@ For this project, I was looking for a dataset with employee data that included a
 
 ## **IBM HR Analytics Employee Attrition**
 
-The dataset for this project was sourced from [Kaggle.com](https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset) and was created by IBM Data Scientists as a fictional representation of HR data. It consists of 1,470 rows and 35 variables that cover demographic details, job characteristics, compensation, performance metrics, and employee satisfaction data. This data serves as the foundation for analyzing factors contributing to employee turnover and developing a predictive model.
+The dataset for this project was sourced from [Kaggle.com](https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset) and was created by IBM Data Scientists as a fictional representation of HR data. It consists of 1,470 observations and 35 variables that cover demographic details, job characteristics, compensation, performance metrics, and employee satisfaction data. This data serves as the foundation for analyzing factors contributing to employee turnover and developing a predictive model.
 
 # Data Cleaning Process
 
@@ -47,7 +47,7 @@ Data cleaning is an important step in data analysis process and focuses on detec
 
 **Loading Data for Cleaning Process**
 
-In order to start the cleaning process, we need make to sure we load the data. In the code below, we use the *library(here)* function to set the file path dynamically, so our script can find and access the data files regardless of the current working directory.
+In order to start the cleaning process, we need make to sure we load the data. In the code below, we use the *library(here)* function to set the file path dynamically, so our script can find and access the data files regardless of the current working directory. You can update this code to point to a specific folder path if needed but this library will make it easier to reproduce the file with the existing folders.
 
 ```{r, message=FALSE}
 #| echo: false
@@ -56,8 +56,8 @@ library(dplyr)
 ```
 
 ```{r, results='hide'}
-hr_data = here::here("data","raw-data","IBM HR Analytics Data.xlsx")
-rawdata = readxl::read_excel(hr_data)
+hr_data = here::here("data","raw-data","IBM HR Analytics Data.xlsx") #file location
+rawdata = readxl::read_excel(hr_data) #reading the file
 ```
 
 **Removing Columns**
@@ -66,9 +66,9 @@ In the next step of my data cleaning process, I removed three columns from the d
 
 ```{r, results='hide'}
 d1 = rawdata %>% 
-  select(-DailyRate, -HourlyRate, -MonthlyRate)
+  select(-DailyRate, -HourlyRate, -MonthlyRate) # the (-) will remove these variables from the dataset
 
-head(d1)
+head(d1) #priting the first 6 observations
 ```
 
 **Adding Descriptive Labels**
@@ -77,7 +77,7 @@ Next, we addressed the *Education* field as the third step in our process. Initi
 
 ```{r, results='hide'}
 d2 = d1 %>% 
-    mutate(Education = case_when(
+    mutate(Education = case_when( 
     Education == 1 ~ "Below College",
     Education == 2 ~ "College",
     Education == 3 ~ "Bachelor's",
@@ -94,11 +94,11 @@ head(d2)
 To enhance the visualization of tenure distribution, I opted to introduce a new variable categorizing employee tenure. This approach allows us to identify the predominant tenure group, offering insights into potential turnover risks.
 
 ```{r, results='hide'}
-tenure_breaks <- seq(0, 40, by = 5)
+tenure_breaks <- seq(0, 40, by = 5) #defining breaks for categories
 tenure_labels <- paste0(tenure_breaks[-length(tenure_breaks)], "-", tenure_breaks[-1], " years")
 
 d3 = d2 %>%
-  mutate(TenureCategory = cut(YearsAtCompany, breaks = tenure_breaks, labels = tenure_labels, include.lowest = TRUE))
+  mutate(TenureCategory = cut(YearsAtCompany, breaks = tenure_breaks, labels = tenure_labels, include.lowest = TRUE)) #creating a new column
 ```
 
 **Saving File**
@@ -106,9 +106,9 @@ d3 = d2 %>%
 The final step in this process involved saving the file as an RDS file. This ensures that we can use it for our exploratory data analysis and maintain an organized project that is reproducible.
 
 ```{r, results='hide'}
-HRprocesseddata = d2
+HRprocesseddata = d2 #creating final object
 
-save_data_location = here::here("data","processed-data","HRprocesseddata.rds")
+save_data_location = here::here("data","processed-data","HRprocesseddata.rds") #using the here library for the location of new file
 saveRDS(HRprocesseddata, file = save_data_location)
 ```
 
@@ -116,11 +116,11 @@ saveRDS(HRprocesseddata, file = save_data_location)
 
 ## Exploratory Data Analysis
 
-I am starting my exploratory data analysis project with the objective of summarizing the dataset. I will begin by providing a concise overview of the variables included. Additionally, I will generate plots and tables to identify any outliers or patterns within the dataset. This analysis will help us understand the data available to us and guide our strategy to predict employee attrition within the organization.
+I am starting my exploratory data analysis project with the objective of summarizing the dataset. I will begin by providing a concise overview of the variables included. Additionally, I will generate plots and tables to identify any outliers or patterns within the dataset. This analysis will help us understand the data available to us and guide our strategy to predict employee attrition within the organization. The variables shown are derived from the dataset that we cleaned in the previous step. This includes new columns, updated values, and excludes columns that we removed.
 
 ### Data Variables
 
-This dataset contains 35 variables, consisting of both character and integer types, with several character variables categorized as categorical. It provides valuable insights into employees, including demographic information such as age, gender, and marital status. Additionally, it offers details about their employment, including monthly income, department, and tenure, which are crucial for understanding their professional profiles and organizational dynamics.
+This dataset contains 33 variables, consisting of both character and integer types, with several character variables categorized as categorical. It provides valuable insights into employees, including demographic information such as age, gender, and marital status. Additionally, it offers details about their employment, including monthly income, department, and tenure, which are crucial for understanding their professional profiles and organizational dynamics.
 
 ```{r}
 #| label: col-hrprocessingdata
@@ -132,7 +132,7 @@ knitr::kable(variables)
 
 ### **Employee Tenure (in years)**
 
-I examined the distribution of employee tenure and identified two distinct peaks: one at 5 years and another at 1 year. This provide quick insights into the typical duration of employees within the organization, and help us identify patterns that may influence employees to resign.
+I examined the distribution of employee tenure and identified two distinct peaks: one at 5 years and another at 1 year. This provide quick insights into the typical duration of employees within the organization, and help us identify patterns that may influence employees to resign. We could concentrate on these groups to identify commonalities and understand the reasons behind their departure from the organization.
 
 ```{r}
 #| label: fig-tenure
@@ -154,7 +154,7 @@ knitr::include_graphics(here("results","figures","tenure-category.png"))
 
 ### **Gender**
 
-The dataset consists of 1470 employees, with a gender distribution showing that males constitute the majority at 60%, while females make up 40%.
+The dataset consists of 1470 employees, with a gender distribution showing that males constitute the majority at 60%, while females make up 40%. This also highlights the gender disparity, and it would be interesting to explore this gap by department and examine attrition rates between the two groups.
 
 **Distribution**
 
@@ -188,17 +188,7 @@ In the bar chart, it is evident that attrition peaks among employees aged betwee
 knitr::include_graphics(here("results","figures","age-attrition.png"))
 ```
 
+Some of these variables may explain why employees are leaving. Understanding the employee profile by examining age, gender, department, and job satisfaction can reveal the reasons behind their departure. By creating profiles based on these insights, we can develop targeted retention strategies to address the specific needs and concerns of these employees.
 
+## Additional Analysis
 
-## Correlation Analysis
-
-As we explore various analysis methods in our class, my focus is on finding potential correlation between variables and employee attrition. I am interested in using the demographic details, job attributes and survey data to uncover pattern (if any) that highlight this issue .
-
-
-```{r}
-
-```
-
-## Predictive Modeling
-
-My main goal is to predict when an employee might leave the company. I am interested in using predictive modeling techniques (also part of my other summer class) to see if we can predict attrition. Once I've identified potential departures, we can use this findings to create strategies to prevent or reduce attrition.

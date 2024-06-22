@@ -29,29 +29,6 @@ mydata = readRDS(data_location)
 
 #lmfitHR = lm(JobSatisfaction~Age, data = mydata)
 
-#summary(lmfitHR)
-
-glm_spec <- logistic_reg() %>%
-  set_engine("glm")
-
-# Split the data
-set.seed(123)
-data_split <- initial_split(mydata, prop = 0.75, strata = Attrition)
-train_data <- training(data_split)
-test_data <- testing(data_split)
-
-# Fit the model
-glm_fit <- glm_spec %>%
-  fit(Attrition ~ Age + DistanceFromHome + Education + EnvironmentSatisfaction + JobInvolvement + JobLevel + JobRole + StockOptionLevel + TotalWorkingYears + TrainingTimesLastYear + WorkLifeBalance + YearsAtCompany + YearsInCurrentRole + YearsSinceLastPromotion + YearsWithCurrManager + TenureCategory, data = train_data)
-
-# Model summary
-summary(glm_fit$fit)
-
-# Predict and evaluate the model
-glm_preds <- predict(glm_fit, test_data, type = "prob")
-glm_roc <- roc_auc(truth = test_data$Attrition, .pred_Yes = glm_preds$.pred_Yes)
-
-# Save the results
 
 
 
@@ -87,4 +64,3 @@ print(lmtable2)
 table_file2 = here("results", "tables", "resulttable2.rds")
 saveRDS(lmtable2, file = table_file2)
 
-  
