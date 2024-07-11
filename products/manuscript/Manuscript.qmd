@@ -110,6 +110,7 @@ HRprocesseddata = d2 #creating final object
 
 save_data_location = here::here("data","processed-data","HRprocesseddata.rds") #using the here library for the location of new file
 saveRDS(HRprocesseddata, file = save_data_location)
+
 ```
 
 # Analysis Methods
@@ -130,7 +131,7 @@ variables=readRDS("../../results/tables/HRvariablestable.rds")
 knitr::kable(variables)
 ```
 
-### **Employee Tenure (in years)**
+### Employee Tenure (in years)
 
 I examined the distribution of employee tenure and identified two distinct peaks: one at 5 years and another at 1 year. This provide quick insights into the typical duration of employees within the organization, and help us identify patterns that may influence employees to resign. We could concentrate on these groups to identify commonalities and understand the reasons behind their departure from the organization.
 
@@ -141,7 +142,7 @@ I examined the distribution of employee tenure and identified two distinct peaks
 knitr::include_graphics(here("results","figures","tenure-distribution.png"))
 ```
 
-**Tenure category**
+### Tenure category
 
 More than half of the employees have tenure of less than 5 years, suggesting a relatively young workforce. Shorter tenure could potentially indicate a higher turnover risk, although a comprehensive analysis incorporating other variables is necessary to fully understand the situation.
 
@@ -152,7 +153,7 @@ More than half of the employees have tenure of less than 5 years, suggesting a r
 knitr::include_graphics(here("results","figures","tenure-category.png"))
 ```
 
-### **Gender**
+### Gender
 
 The dataset consists of 1470 employees, with a gender distribution showing that males constitute the majority at 60%, while females make up 40%. This also highlights the gender disparity, and it would be interesting to explore this gap by department and examine attrition rates between the two groups.
 
@@ -166,7 +167,7 @@ gender_table=readRDS("../../results/tables/HRgendertable.rds")
 knitr::kable(gender_table)
 ```
 
-### **Monthly Income and Education**
+### Monthly Income and Education
 
 I'm interested in examining which educational group experiences higher attrition rates. It's evident from the data that median salaries increase with higher levels of education, but there are also numerous outliers present. This visualization serves to highlight the relationship between monthly income and educational background, which could provide insights into how these factors influence employee turnover.
 
@@ -177,7 +178,7 @@ I'm interested in examining which educational group experiences higher attrition
 knitr::include_graphics(here("results","figures","income-education.png"))
 ```
 
-### **Age vs Attrition**
+### Age vs Attrition
 
 In the bar chart, it is evident that attrition peaks among employees aged between 28 and 32. This trend suggests that individuals in this age group may be more likely to leave the company. Possible reasons for increased turnover in this demographic could include career advancement opportunities elsewhere, desire for higher compensation, or life changes such as starting a family.
 
@@ -190,5 +191,55 @@ knitr::include_graphics(here("results","figures","age-attrition.png"))
 
 Some of these variables may explain why employees are leaving. Understanding the employee profile by examining age, gender, department, and job satisfaction can reveal the reasons behind their departure. By creating profiles based on these insights, we can develop targeted retention strategies to address the specific needs and concerns of these employees.
 
-## Additional Analysis
+## Statistical Analysis Analysis
+
+### Logistic Regression with Age
+
+I conducted logistic regressions to explore predictors of Attrition among employees. Age emerged as a significant factor, with each additional year decreasing Attrition odds by approximately 0.052 (p < 0.001), underscoring its impact on turnover.
+
+These findings emphasize the need for age-sensitive strategies, such as mentorship programs for knowledge transfer, flexible work arrangements, and tailored career development opportunities. Leveraging experience can foster commitment and reduce turnover among senior employees. However, limitations include the model's inability to capture all turnover influencers, like career aspirations or economic factors.
+
+```{r}
+#| label: tbl-logAge
+#| tbl-cap: "Logistic Regression - Age"
+#| echo: FALSE
+logAge_table=readRDS("../../results/tables/logistic_age.rds")
+knitr::kable(logAge_table)
+
+
+```
+
+
+### Logistic Regression with Income
+
+Money plays a crucial role in life decisions, including work-related choices. I examined Monthly Income to understand its impact on Attrition among employees. The results show that higher Monthly Income is associated with lower odds of Attrition. Specifically, for each unit increase in Monthly Income, the odds of Attrition decrease by about 0.0001271 (p < 0.001), highlighting its significant influence on turnover.
+
+To leverage these findings, organizations can consider implementing competitive salary structures, performance-based incentives, and financial wellness programs. These initiatives can enhance employee satisfaction and retention, particularly among those sensitive to income-related factors.
+```{r}
+#| label: tbl-logInc
+#| tbl-cap: "Logistic Regression - Income"
+#| echo: FALSE
+logInc_table=readRDS("../../results/tables/logistic_income.rds")
+knitr::kable(logInc_table)
+
+```
+
+
+
+### Logistic Regresion with Age, Income, and Job Satisfaction
+
+I used a logistic regression model to study how Age, Monthly Income, and Job Satisfaction collectively affect Attrition among employees. This approach allowed me to explore their combined impact on turnover. The analysis revealed that older employees, those with higher incomes, and greater job satisfaction are significantly less likely to leave. Specifically, each additional year of Age reduces Attrition likelihood by about 0.0328 (p < 0.001), with similar significant impacts observed for Monthly Income and Job Satisfaction.
+```{r}
+#| label: tbl-glm
+#| tbl-cap: "GLM - Age, Income, and Job Satisfaction"
+#| echo: FALSE
+glm_table=readRDS("../../results/tables/glm_model.rds")
+knitr::kable(glm_table)
+```
+
+
+## Next Steps
+
+We must investigate more predictors of attrition to identify root causes and develop essential strategies for retaining employees and improving the overall employee experience.
+
 
