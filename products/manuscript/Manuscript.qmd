@@ -21,7 +21,7 @@ library(knitr)
 
 # Project Overview
 
-The primary objective of this project is to identify the key factors contributing to employee turnover and to develop a model that can predict potential departures within a company. By anticipating these departures, we can create strategies for employee retention and enhance the overall employee experience.
+The primary objective of this project is to identify the key factors contributing to employee turnover by developing a model that can provide the predictors that influence employees to leave the organization. By identifying this factors, we can create strategies for employee retention and enhance the overall employee experience.
 
 I find this dataset interesting, as it aligns with my previous experience in HR Analytics. Although I've worked in this field before, I never had the opportunity to work on project where we could predict attrition. This project allows me to deep dive into the data I am interested about, while also enhancing my skills in modeling using R.
 
@@ -45,7 +45,7 @@ The dataset for this project was sourced from [Kaggle.com](https://www.kaggle.co
 
 Data cleaning is an important step in data analysis process and focuses on detecting and correcting errors and inconsistencies in the dataset. The goals is to ensure that the data is accurate, complete and reliable. Overall, this dataset didn't have any anomalies and there were only a couple of steps I took to prepare the data. The steps we took are the following:
 
-**Loading Data for Cleaning Process**
+## Loading Data for Cleaning Process
 
 In order to start the cleaning process, we need make to sure we load the data. In the code below, we use the *library(here)* function to set the file path dynamically, so our script can find and access the data files regardless of the current working directory. You can update this code to point to a specific folder path if needed but this library will make it easier to reproduce the file with the existing folders.
 
@@ -60,7 +60,7 @@ hr_data = here::here("data","raw-data","IBM HR Analytics Data.xlsx") #file locat
 rawdata = readxl::read_excel(hr_data) #reading the file
 ```
 
-**Removing Columns**
+## Removing Columns
 
 In the next step of my data cleaning process, I removed three columns from the dataset. The columns we removed are *DailyRate*, *HourlyRate* and *MonthlyRate.* These columns were removed because the numbers they contained did not align logically or meaningfully. Upon further investigation, it became evident that there was no clear resolution to these discrepancies in Kaggle, and many suggested focusing instead on the Monthly Income field to maintain data consistency and reliability.
 
@@ -71,7 +71,7 @@ d1 = rawdata %>%
 head(d1) #priting the first 6 observations
 ```
 
-**Adding Descriptive Labels**
+## Adding Descriptive Labels
 
 Next, we addressed the *Education* field as the third step in our process. Initially numeric, it contained values ranging from 1 to 5. Using our data dictionary, we updated these numeric values to their corresponding labels. This adjustment enhances our understanding of employee education levels in the dataset and ensures consistency in the data.
 
@@ -89,7 +89,7 @@ d2 = d1 %>%
 head(d2)
 ```
 
-**Tenure Categorization**
+## Tenure Categorization
 
 To enhance the visualization of tenure distribution, I opted to introduce a new variable categorizing employee tenure. This approach allows us to identify the predominant tenure group, offering insights into potential turnover risks.
 
@@ -101,7 +101,7 @@ d3 = d2 %>%
   mutate(TenureCategory = cut(YearsAtCompany, breaks = tenure_breaks, labels = tenure_labels, include.lowest = TRUE)) #creating a new column
 ```
 
-**Saving File**
+## Saving File
 
 The final step in this process involved saving the file as an RDS file. This ensures that we can use it for our exploratory data analysis and maintain an organized project that is reproducible.
 
@@ -195,7 +195,7 @@ Some of these variables may explain why employees are leaving. Understanding the
 
 ### Logistic Regression with Age
 
-I conducted logistic regressions to explore predictors of Attrition among employees. Age emerged as a significant factor, with each additional year decreasing Attrition odds by approximately 0.052 (p < 0.001), underscoring its impact on turnover.
+I conducted logistic regressions to explore predictors of Attrition among employees. Age emerged as a significant factor, with each additional year decreasing Attrition odds by approximately 0.052 (p \< 0.001), underscoring its impact on turnover.
 
 These findings emphasize the need for age-sensitive strategies, such as mentorship programs for knowledge transfer, flexible work arrangements, and tailored career development opportunities. Leveraging experience can foster commitment and reduce turnover among senior employees. However, limitations include the model's inability to capture all turnover influencers, like career aspirations or economic factors.
 
@@ -209,12 +209,12 @@ knitr::kable(logAge_table)
 
 ```
 
-
 ### Logistic Regression with Income
 
-Money plays a crucial role in life decisions, including work-related choices. I examined Monthly Income to understand its impact on Attrition among employees. The results show that higher Monthly Income is associated with lower odds of Attrition. Specifically, for each unit increase in Monthly Income, the odds of Attrition decrease by about 0.0001271 (p < 0.001), highlighting its significant influence on turnover.
+Money plays a crucial role in life decisions, including work-related choices. I examined Monthly Income to understand its impact on Attrition among employees. The results show that higher Monthly Income is associated with lower odds of Attrition. Specifically, for each unit increase in Monthly Income, the odds of Attrition decrease by about 0.0001271 (p \< 0.001), highlighting its significant influence on turnover.
 
 To leverage these findings, organizations can consider implementing competitive salary structures, performance-based incentives, and financial wellness programs. These initiatives can enhance employee satisfaction and retention, particularly among those sensitive to income-related factors.
+
 ```{r}
 #| label: tbl-logInc
 #| tbl-cap: "Logistic Regression - Income"
@@ -224,11 +224,10 @@ knitr::kable(logInc_table)
 
 ```
 
-
-
 ### Logistic Regresion with Age, Income, and Job Satisfaction
 
-I used a logistic regression model to study how Age, Monthly Income, and Job Satisfaction collectively affect Attrition among employees. This approach allowed me to explore their combined impact on turnover. The analysis revealed that older employees, those with higher incomes, and greater job satisfaction are significantly less likely to leave. Specifically, each additional year of Age reduces Attrition likelihood by about 0.0328 (p < 0.001), with similar significant impacts observed for Monthly Income and Job Satisfaction.
+I used a logistic regression model to study how Age, Monthly Income, and Job Satisfaction collectively affect Attrition among employees. This approach allowed me to explore their combined impact on turnover. The analysis revealed that older employees, those with higher incomes, and greater job satisfaction are significantly less likely to leave. Specifically, each additional year of Age reduces Attrition likelihood by about 0.0328 (p \< 0.001), with similar significant impacts observed for Monthly Income and Job Satisfaction.
+
 ```{r}
 #| label: tbl-glm
 #| tbl-cap: "GLM - Age, Income, and Job Satisfaction"
@@ -237,9 +236,84 @@ glm_table=readRDS("../../results/tables/glm_model.rds")
 knitr::kable(glm_table)
 ```
 
+### Random Forest Model
 
-## Next Steps
+For our last model, I choose a Random Forest due to its capability to manage intricate, nonlinear relationships among numerous variables without overfitting. This model excels in accuracy and offers valuable insights into predictor importance, helping us identify the most influential factors affecting attrition.
 
-We must investigate more predictors of attrition to identify root causes and develop essential strategies for retaining employees and improving the overall employee experience.
+For this model, I did the following:
+
+-   Split the dataset into 80% training and 20% testing to evaluate model performance. This suggestion was taken from my predictive modeling class.
+
+-   We then balanced the training data to address class imbalanced which can affect the model accuracy. There were many more examples of non attrition than attrition so we needed to address them for the model.
+
+The call below specifies the model's formula, data, and parameters used, while noting it's a classification Random Forest predicting Attrition **(Yes 1 /No 0)** outcomes with 1000 trees. Each tree uses 5 variables per split to enhance stability and accuracy, balancing computational resources against model variance.
+
+```{r}
+#| label: tbl-rfmodel
+#| tbl-cap: "Random Forest Model"
+#| echo: FALSE
+rf_model=readRDS("../../results/tables/rf_summary.rds")
+knitr::kable(rf_model)
+```
+
+#### Random Forest Model Results
+
+Performance: The Random Forest model demonstrated excellent predictive capabilities, with an OOB error rate of just 3.95%, indicating high accuracy. The confusion matrix confirmed strong performance, particularly in identifying true positives and negatives, with low false positive and false negative rates.
+
+**Class Error:**
+
+-   0.0141844 for '0' (No Attrition): Very low error rate, indicating high accuracy for predicting non-attrition.
+
+    -   73 True Negatives (TN): Non-attrition cases correctly identified.
+
+    -   14 False Positives (FP): Non-attrition cases incorrectly predicted as attrition.
+
+-   0.1052632 for '1' (Attrition): Higher error rate, suggesting room for improvement in predicting actual attrition cases.
+
+    -   40 False Negatives (FN): Attrition cases missed by the model.
+
+    -   340 True Positives (TP): Attrition cases correctly identified.
+
+### Random Forest Top 5 Predictors
+
+**Top 5 Predictors:**
+
+1.  Overtime: has the highest decrease in accuracy and Gini when excluded, indicating it's a crucial predictor of attrition. High values suggest that employees working overtime are significantly more likely to leave.
+
+2.  Monthly Income: This variable strongly influences attrition, implying that employees with certain income levels may be more prone to leaving, possibly due to pay dissatisfaction or better opportunities elsewhere.
+
+3.  Age: impacts attrition decisions, with potential reasons including generational expectations, life stage career goals, and job fit.
+
+4.  Job Satisfaction: A critical predictor indicating that lower job satisfaction is strongly associated with higher attrition.
+
+5.  Distance from Home: Longer commutes are linked to higher attrition, suggesting that travel time affects employee satisfaction and retention.
+
+```{r}
+#| label: tbl-rfpred
+#| tbl-cap: "Random Forest Top Predictors"
+#| echo: FALSE
+rf_5pred=readRDS("../../results/tables/rd_top_predictors.rds")
+knitr::kable(rf_5pred)
+```
 
 
+
+# Strategies to Prevent Attrition
+
+Based on insights from the models, it's evident that factors such as overtime, monthly income, age, job satisfaction, and distance from home significantly influence employees' decisions to leave the organization. Armed with this information, we can create strategies focus at reducing employee turnover. 
+
+Proposed strategies include:
+
+-   OverTime Management: Implement strict overtime policies and ensure workload distribution is balanced. Encouraging time-off and providing support during peak times can prevent burnout.
+
+-   Compensation and Benefits: Regular market analysis to ensure competitive pay scales and comprehensive benefits tailored to meet the diverse needs of the workforce can help in retaining talent, particularly those influenced by financial incentives.
+
+-   Age-Adaptive HR Policies: Designing age-specific policies that cater to the unique needs and preferences of different generational cohorts within the workplace. For example, younger employees might value professional development and upskilling opportunities more than their older counterparts, who might prioritize job security and healthcare benefits.
+
+-   Enhancing Job Satisfaction: Focus on creating a positive work environment where employees feel valued and have clear career paths. This can include team-building activities, transparent communication from management, and continuous professional development.
+
+-   Flexible Working Arrangements: For employees burdened by long commutes, flexible working arrangements can be a game-changer. This could range from offering telecommuting options to establishing satellite offices closer to where clusters of employees live.
+
+# Conclusion
+
+Building on these strategies, it's clear that addressing key factors like overtime, monthly income, age, job satisfaction, and distance from home can mitigate attrition risks. However, retaining talent involves ongoing efforts beyond initial strategies. Establishing a robust feedback system for continuous improvement, fostering a culture of open communication and trust, and regularly reviewing and adapting policies based on employee feedback can further strengthen retention efforts. Investing in leadership development programs to empower managers with skills to support and engage their teams effectively can also play a crucial role. By integrating these approaches with a commitment to fostering a supportive and inclusive workplace culture, organizations can create an environment where employees are motivated to stay and thrive, ultimately reducing turnover and fostering long-term organizational success.
