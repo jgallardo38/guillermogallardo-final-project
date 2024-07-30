@@ -1,9 +1,21 @@
 # Raw-Data
 
-This directory contains all raw data necessary for the project. Subfolders can be added as needed.
+This directory serves as the repository for all raw data files necessary for initiating the project. It is structured to accommodate additional subfolders if needed, ensuring a scalable and organized storage solution.
 
-The dataset intentionally includes some faulty entries that require cleaning.
+# Overview
 
-It's generally advisable for any dataset to include metadata explaining each variable, often referred to as a Codebook. In this example, the codebook is provided as a second sheet in the Excel file.
+The raw data contained here includes essential datasets as obtained from external sources or initial data collection efforts. Notably, the dataset incorporates some intentional faulty entries to simulate real-world data imperfections, necessitating thorough data cleaning processes.
 
-The dataset was sourced from Kaggle.com and can be accessed via this https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset/data
+# Key Components
+
+## Codebook
+
+Location: Included as the second sheet in the main Excel file.
+
+The codebook is critical for understanding the data as it provides detailed descriptions of each variable within the dataset. This metadata is crucial for accurate data interpretation and subsequent analysis.
+
+## Data Source
+
+The dataset is sourced from Kaggle, a platform for predictive modelling and analytics competitions. It can be accessed directly through the following URL:
+
+https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset/data

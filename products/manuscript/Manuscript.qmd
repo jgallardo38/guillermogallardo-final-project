@@ -8,8 +8,6 @@ format:
     toc: false
     number-sections: true
     highlight-style: github
-bibliography: ../../assets/dataanalysis-references.bib
-csl: ../../assets/apa.csl
 ---
 
 ```{r, echo=FALSE, message=FALSE}
